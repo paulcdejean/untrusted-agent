@@ -38,7 +38,7 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
 
   service_config {
     service_account_email = google_service_account.proxy.email
-    available_memory      = "128M"
+    available_memory      = "128Mi"
     max_instance_count    = 3
     # Agentic responses stream for a long time; give them the gen2 HTTP maximum.
     timeout_seconds  = 3600
