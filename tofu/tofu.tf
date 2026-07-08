@@ -30,9 +30,11 @@ terraform {
   }
 }
 
+# No default project: the ID comes from the name lookup in data.tf, and a
+# provider config can't depend on a data source it itself reads. Every
+# resource sets project explicitly instead.
 provider "google" {
-  project = local.workspace.project_id
-  region  = local.workspace.region
+  region = local.workspace.region
 }
 
 # Authenticates with the OPENROUTER_API_KEY environment variable, which must

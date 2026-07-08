@@ -44,11 +44,13 @@ Trust boundaries:
 
 ## Deploying
 
-The project itself is created out of band, once:
+The project itself is created out of band, once. Tofu finds it by display
+**name** (`untrusted-agent`), not by ID — IDs are globally unique, so pick
+whatever ID is free:
 
 ```sh
-gcloud projects create untrusted-agent
-gcloud billing projects link untrusted-agent \
+gcloud projects create <any-free-id> --name untrusted-agent
+gcloud billing projects link <any-free-id> \
   --billing-account $(gcloud billing accounts list --format 'value(name)')
 ```
 
@@ -84,8 +86,7 @@ vars at startup — `latest` would go stale in warm instances).
 ## Using the agent
 
 ```sh
-gcloud compute ssh untrusted-agent-unstable --project untrusted-agent \
-  --zone us-central1-a --tunnel-through-iap
+$(cd tofu && tofu output -raw ssh_command)
 pi --model openrouter/deepseek/deepseek-v4-flash
 ```
 

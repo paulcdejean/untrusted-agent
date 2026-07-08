@@ -31,7 +31,7 @@ resource "terraform_data" "agent_immutables" {
 }
 
 resource "google_compute_instance" "agent" {
-  project      = local.workspace.project_id
+  project      = local.project_id
   name         = "untrusted-agent-${tofu.workspace}"
   zone         = local.workspace.zone
   machine_type = local.agent_machine_type
@@ -73,5 +73,5 @@ resource "google_compute_instance" "agent" {
 }
 
 output "ssh_command" {
-  value = "gcloud compute ssh ${google_compute_instance.agent.name} --project ${local.workspace.project_id} --zone ${google_compute_instance.agent.zone} --tunnel-through-iap"
+  value = "gcloud compute ssh ${google_compute_instance.agent.name} --project ${local.project_id} --zone ${google_compute_instance.agent.zone} --tunnel-through-iap"
 }
