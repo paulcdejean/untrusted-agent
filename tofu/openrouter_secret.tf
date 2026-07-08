@@ -5,7 +5,7 @@
 # below only exists to create the secret; adding a real version supersedes it.
 resource "google_secret_manager_secret" "openrouter_api_key" {
   project   = local.workspace.project_id
-  secret_id = "openrouter_api_key"
+  secret_id = "untrusted_agent/${tofu.workspace}/openrouter_api_key"
   replication {
     auto {}
   }

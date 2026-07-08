@@ -1,6 +1,6 @@
 resource "google_storage_bucket" "function_source" {
   project                     = local.workspace.project_id
-  name                        = "${local.workspace.project_id}-function-source"
+  name                        = "${local.workspace.project_id}-${tofu.workspace}-function-source"
   location                    = local.workspace.region
   uniform_bucket_level_access = true
   force_destroy               = true
@@ -22,7 +22,7 @@ resource "google_storage_bucket_object" "proxy_source" {
 
 resource "google_cloudfunctions2_function" "openrouter_proxy" {
   project  = local.workspace.project_id
-  name     = "openrouter-proxy"
+  name     = "untrusted-agent-proxy-${tofu.workspace}"
   location = local.workspace.region
 
   build_config {

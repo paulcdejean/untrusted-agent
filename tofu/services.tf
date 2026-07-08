@@ -1,10 +1,3 @@
-# The project itself is created out of band:
-#   gcloud projects create untrusted-agent-paul
-#   gcloud billing projects link untrusted-agent-paul --billing-account=...
-data "google_project" "agent" {
-  project_id = local.workspace.project_id
-}
-
 resource "google_project_service" "services" {
   for_each = toset([
     "cloudresourcemanager.googleapis.com",

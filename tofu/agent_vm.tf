@@ -1,6 +1,6 @@
 resource "google_compute_instance" "agent" {
   project      = local.workspace.project_id
-  name         = "untrusted-agent"
+  name         = "untrusted-agent-${tofu.workspace}"
   zone         = local.workspace.zone
   machine_type = "e2-small"
 

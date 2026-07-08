@@ -33,7 +33,7 @@ resource "google_project_iam_member" "agent_monitoring" {
 resource "google_project_iam_member" "compute_default_builds" {
   project    = local.workspace.project_id
   role       = "roles/cloudbuild.builds.builder"
-  member     = "serviceAccount:${data.google_project.agent.number}-compute@developer.gserviceaccount.com"
+  member     = "serviceAccount:${data.google_project.this.number}-compute@developer.gserviceaccount.com"
   depends_on = [google_project_service.services]
 }
 
