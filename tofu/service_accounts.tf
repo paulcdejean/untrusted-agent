@@ -1,7 +1,7 @@
 # Holds the only secret access in the system: reads openrouter_api_key at runtime.
 resource "google_service_account" "proxy" {
   project      = local.workspace.project_id
-  account_id   = "untrusted-agent-proxy-${tofu.workspace}"
+  account_id   = "proxy-${tofu.workspace}"
   display_name = "Untrusted agent proxy function"
   depends_on   = [google_project_service.services]
 }
@@ -11,7 +11,7 @@ resource "google_service_account" "proxy" {
 # OpenRouter key.
 resource "google_service_account" "agent" {
   project      = local.workspace.project_id
-  account_id   = "untrusted-agent-${tofu.workspace}"
+  account_id   = "agent-${tofu.workspace}"
   display_name = "Untrusted agent VM"
   depends_on   = [google_project_service.services]
 }
