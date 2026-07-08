@@ -1,9 +1,11 @@
 locals {
   agent_machine_type = "e2-small"
+  bun_version        = "1.3.14"
   agent_startup_script = templatefile("${path.module}/templates/startup.sh.tftpl", {
     # The run.app service URI, not .url: the cloudfunctions.net form carries
     # the function name as a path, which proxied request paths must not clobber.
     proxy_url = google_cloudfunctions2_function.openrouter_proxy.service_config[0].uri
+    bun_version    = local.bun_version
     sidecar_source = file("${path.module}/templates/sidecar.mjs")
     models_json    = file("${path.module}/templates/models.json")
     settings_json  = file("${path.module}/templates/settings.json")
