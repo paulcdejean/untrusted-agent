@@ -1,0 +1,30 @@
+{
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (key held by proxy)",
+      "baseUrl": "http://127.0.0.1:8787/api/v1",
+      "apiKey": "not_the_key",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "anthropic/claude-sonnet-4.5",
+          "name": "Claude Sonnet 4.5",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 200000,
+          "maxTokens": 16384
+        },
+        {
+          "id": "openai/gpt-4o",
+          "name": "GPT-4o",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 128000,
+          "maxTokens": 8192
+        }
+      ]
+    }
+  }
+}
