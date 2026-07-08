@@ -45,3 +45,13 @@ EOF_MODELS
 cat > /etc/skel/.pi/agent/settings.json <<'EOF_SETTINGS'
 ${settings_json}
 EOF_SETTINGS
+
+# OS Login creates a home from /etc/skel at first SSH, which can happen while
+# this script is still running — before the files above exist. Self-heal on
+# every login so first-login timing doesn't matter.
+cat > /etc/profile.d/pi-seed.sh <<'EOF_SEED'
+if [ ! -f "$HOME/.pi/agent/models.json" ] && [ -f /etc/skel/.pi/agent/models.json ]; then
+  mkdir -p "$HOME/.pi/agent"
+  cp /etc/skel/.pi/agent/*.json "$HOME/.pi/agent/"
+fi
+EOF_SEED
