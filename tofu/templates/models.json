@@ -1,0 +1,21 @@
+{
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (key held by proxy)",
+      "baseUrl": "http://127.0.0.1:8787/api/v1",
+      "apiKey": "not_the_key",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "deepseek/deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "reasoning": false,
+          "input": ["text"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 1048576,
+          "maxTokens": 65536
+        }
+      ]
+    }
+  }
+}

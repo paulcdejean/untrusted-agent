@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Provisions the untrusted agent box: Node 24, the pi coding agent, and the
+# identity-token sidecar. Runs on every boot; every step is idempotent.
+set -euo pipefail
+
+if ! command -v node >/dev/null 2>&1; then
+  curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+  apt-get install -y nodejs
+fi
+
+npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
+mkdir -p /opt/sidecar
+cat > /opt/sidecar/sidecar.mjs <<'EOF_SIDECAR'
+${sidecar_source}
+EOF_SIDECAR
+
+cat > /etc/systemd/system/openrouter-sidecar.service <<'EOF_UNIT'
+[Unit]
+Description=OpenRouter identity-token sidecar
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Environment=PROXY_URL=${proxy_url}
+Environment=PORT=8787
+ExecStart=/usr/bin/node /opt/sidecar/sidecar.mjs
+DynamicUser=yes
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+EOF_UNIT
+
+systemctl daemon-reload
+systemctl enable --now openrouter-sidecar.service
+
+# Every account created on this box (OS Login homes come from /etc/skel) gets
+# pi pre-pointed at the sidecar, with a key that is deliberately not a key.
+mkdir -p /etc/skel/.pi/agent
+cat > /etc/skel/.pi/agent/models.json <<'EOF_MODELS'
+${models_json}
+EOF_MODELS
+cat > /etc/skel/.pi/agent/settings.json <<'EOF_SETTINGS'
+${settings_json}
+EOF_SETTINGS
+
+# OS Login creates a home from /etc/skel at first SSH, which can happen while
+# this script is still running — before the files above exist. Self-heal on
+# every login so first-login timing doesn't matter.
+cat > /etc/profile.d/pi-seed.sh <<'EOF_SEED'
+if [ ! -f "$HOME/.pi/agent/models.json" ] && [ -f /etc/skel/.pi/agent/models.json ]; then
+  mkdir -p "$HOME/.pi/agent"
+  cp /etc/skel/.pi/agent/*.json "$HOME/.pi/agent/"
+fi
+EOF_SEED
