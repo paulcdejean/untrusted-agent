@@ -25,8 +25,9 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
   location = local.workspace.region
 
   build_config {
-    runtime     = "go126"
-    entry_point = "proxy"
+    runtime         = "go126"
+    entry_point     = "proxy"
+    service_account = google_service_account.build.id
     source {
       storage_source {
         bucket = google_storage_bucket.function_source.name
@@ -57,7 +58,7 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
 
   depends_on = [
     google_secret_manager_secret_iam_member.proxy_reads_key,
-    google_project_iam_member.compute_default_builds,
+    time_sleep.build_iam_propagation,
   ]
 }
 

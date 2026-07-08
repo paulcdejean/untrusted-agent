@@ -1,9 +1,5 @@
 # Future plans, in priority order
 
-## Make sure multiple environments single project is supported
-
-Might require splitting tofu into layers not sure
-
 ## Document the setup process
 
 Setting up the auth for the r2 remote state for example, isn't intuitive.
@@ -25,7 +21,7 @@ it:
    replaces the `roles/run.invoker` binding.
 
 Why: a Worker isolate idles at ~3MB and rides the free tier, versus a
-~130MiB Node container baseline on Cloud Run. The whole cross-cloud trust
+container baseline on Cloud Run. The whole cross-cloud trust
 chain costs $0 on both sides — no AWS-Roles-Anywhere-style private CA,
 because cloud workloads already have free, auto-rotating OIDC identities
 that anyone can verify with public keys.

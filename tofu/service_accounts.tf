@@ -6,6 +6,16 @@ resource "google_service_account" "proxy" {
   depends_on   = [google_project_service.services]
 }
 
+# Runs the proxy function's builds. The compute default SA would work (with
+# roles/cloudbuild.builds.builder, no longer automatic since May 2024) but is
+# shared project-wide, and each workspace must own its own IAM members.
+resource "google_service_account" "build" {
+  project      = local.project_id
+  account_id   = "build-${tofu.workspace}"
+  display_name = "Untrusted agent function build"
+  depends_on   = [google_project_service.services]
+}
+
 # Identity of the agent VM. Deliberately near-powerless: it can invoke the
 # proxy and write its own logs/metrics, nothing else. It can never read the
 # OpenRouter key.

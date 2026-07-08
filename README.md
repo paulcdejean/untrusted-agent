@@ -40,7 +40,10 @@ Trust boundaries:
 ## Layout
 
 * `tofu/` — the whole stack (project, secret, proxy function, VM). State on
-  R2 via the `cloudflare` AWS profile, `unstable` workspace.
+  R2 via the `cloudflare` AWS profile. Two workspaces, `unstable` and `prod`,
+  share the one GCP project: every resource is namespaced by workspace and no
+  project-level binding is shared, so either can be destroyed without
+  touching the other.
 * `proxy/` — Go source for the Cloud Run function; zipped and deployed by
   tofu.
 
@@ -62,7 +65,7 @@ Then:
 cd tofu
 export OPENROUTER_API_KEY=sk-or-...   # a *provisioning* key, from openrouter.ai/settings/keys
 tofu init
-tofu workspace new unstable   # first time only
+tofu workspace new unstable   # or prod; first time only
 tofu apply
 ```
 

@@ -28,26 +28,49 @@ resource "google_project_iam_member" "agent_monitoring" {
   member  = "serviceAccount:${google_service_account.agent.email}"
 }
 
-# Cloud Functions gen2 builds run as the compute default SA on new projects,
-# which no longer gets this role automatically (GCP change of May 2024).
-resource "google_project_iam_member" "compute_default_builds" {
-  project    = local.project_id
-  role       = "roles/cloudbuild.builds.builder"
-  member     = "serviceAccount:${data.google_project.this.number}-compute@developer.gserviceaccount.com"
-  depends_on = [google_project_service.services]
+# Function builds run as a per-workspace SA (see proxy_function.tf) so that
+# workspaces sharing one project never share a binding — with the compute
+# default SA, both workspaces' states would own the same member.
+resource "google_project_iam_member" "build_builds" {
+  project = local.project_id
+  role    = "roles/cloudbuild.builds.builder"
+  member  = "serviceAccount:${google_service_account.build.email}"
 }
 
-# Human access to the VM: OS Login + IAP tunnel.
-resource "google_project_iam_member" "admin_oslogin" {
-  project = local.project_id
-  role    = "roles/compute.osAdminLogin"
-  member  = local.admin_member
+# A build kicked off seconds after the grant above loses the IAM propagation
+# race (observed on both workspaces: "Access to bucket gcf-v2-sources-*
+# denied"). Sleeping only on grant creation keeps steady-state applies free.
+resource "time_sleep" "build_iam_propagation" {
+  create_duration = "20s"
+  triggers = {
+    grant = google_project_iam_member.build_builds.id
+  }
 }
 
-resource "google_project_iam_member" "admin_iap_tunnel" {
-  project = local.project_id
-  role    = "roles/iap.tunnelResourceAccessor"
-  member  = local.admin_member
+# Human access to the VM: OS Login + IAP tunnel, granted on the instance
+# rather than the project — per-workspace, and the smallest scope that works.
+# Instance IAM dies with the instance, and this VM is replaced routinely, so
+# the grants must be replaced in the same apply.
+resource "google_compute_instance_iam_member" "admin_oslogin" {
+  project       = local.project_id
+  zone          = google_compute_instance.agent.zone
+  instance_name = google_compute_instance.agent.name
+  role          = "roles/compute.osAdminLogin"
+  member        = local.admin_member
+  lifecycle {
+    replace_triggered_by = [google_compute_instance.agent.id]
+  }
+}
+
+resource "google_iap_tunnel_instance_iam_member" "admin_iap_tunnel" {
+  project  = local.project_id
+  zone     = google_compute_instance.agent.zone
+  instance = google_compute_instance.agent.name
+  role     = "roles/iap.tunnelResourceAccessor"
+  member   = local.admin_member
+  lifecycle {
+    replace_triggered_by = [google_compute_instance.agent.id]
+  }
 }
 
 resource "google_service_account_iam_member" "admin_uses_agent_sa" {

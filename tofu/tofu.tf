@@ -13,6 +13,10 @@ terraform {
       source  = "cloudopsworks/openrouter"
       version = "0.2.17"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "0.14.0"
+    }
   }
   backend "s3" {
     profile                     = "cloudflare"

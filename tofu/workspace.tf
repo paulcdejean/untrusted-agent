@@ -1,10 +1,16 @@
 locals {
   workspace = local.workspaces[tofu.workspace]
   workspaces = {
+    # Both workspaces share one project (looked up by display name, not ID —
+    # IDs are globally unique, so whoever deploys this ends up with a
+    # different one; data.tf resolves the name). Every resource is namespaced
+    # by workspace, and nothing project-level is shared between them.
     unstable = {
-      # The project's display name, not its ID — IDs are globally unique, so
-      # whoever deploys this ends up with a different one. data.tf resolves
-      # the name to the actual ID.
+      project_name = "untrusted-agent"
+      region       = "us-central1"
+      zone         = "us-central1-a"
+    }
+    prod = {
       project_name = "untrusted-agent"
       region       = "us-central1"
       zone         = "us-central1-a"
