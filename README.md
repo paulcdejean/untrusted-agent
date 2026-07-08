@@ -25,8 +25,9 @@ Trust boundaries:
   and nothing else. No Secret Manager access anywhere in its reach.
 * The proxy's service account is the only principal with `secretAccessor` on
   the OpenRouter key secret.
-* The VM has no external IP (egress via Cloud NAT) and accepts SSH only from
-  IAP's tunnel range.
+* The VM has no external IPv4; egress rides a free external IPv6 in a custom
+  VPC with no ingress rules (the GCP analog of an AWS egress-only internet
+  gateway), and SSH is accepted only from IAP's tunnel range.
 * The real key never enters tofu state: the secret version is created
   write-only with a placeholder, and the live value is added out of band.
 
@@ -34,8 +35,8 @@ Trust boundaries:
 
 * `tofu/` — the whole stack (project, secret, proxy function, VM). State on
   R2 via the `cloudflare` AWS profile, `unstable` workspace.
-* `proxy/` — Node 24 source for the Cloud Run function; zipped and deployed
-  by tofu.
+* `proxy/` — Go source for the Cloud Run function; zipped and deployed by
+  tofu.
 
 ## Deploying
 

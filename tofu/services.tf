@@ -16,4 +16,7 @@ resource "google_project_service" "services" {
   project            = local.workspace.project_id
   service            = each.value
   disable_on_destroy = false
+  lifecycle {
+    destroy = false
+  }
 }
