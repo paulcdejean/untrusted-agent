@@ -1,6 +1,40 @@
 # This file is maintained automatically by "tofu init".
 # Manual edits may be lost in future updates.
 
+provider "registry.opentofu.org/cloudopsworks/openrouter" {
+  version     = "0.2.17"
+  constraints = "0.2.17"
+  hashes = [
+    "h1:1ZDiFtiuoiexXOBIfWfkOu6TVLYv/uhFD1oqdnWx9gU=",
+    "h1:DiqXCU5RA12IGQ+xTwyt2IXCvaa2w0RrecFn2YNoDpE=",
+    "h1:E/DZ3ryDAWsfuwnx3cyk9ragkLhSLmI4LgP/nfctF9s=",
+    "h1:FkrCKeoYJ49KBVT07h39jqy0n6YwCLoG5eoEcJ2ECA8=",
+    "h1:K3DX8Uaj/wP77vmaqEsObm5ytYiMBNqZtThmklRveV4=",
+    "h1:fPi9UOFjs7RsqN6VYx5g4v1M+2Veap54gn+czbsn3Pw=",
+    "h1:fhOUzII/saZGPr4q0VUJK9Q/Exgq7XNgmHIdxmYckek=",
+    "h1:j1Yv0woVBj3JM5rStOkI0aCCxhETtgI+N673Tqgsw9c=",
+    "h1:kiyqVKAIRjKF1QoA1VqAlFs7+juTkbSF07AV2Ilud8Q=",
+    "h1:mDuIPtguFjEll0FyzHTzeL1gekJLIZtz9NIhB80lCqk=",
+    "h1:tj5IyDPQqehRqH04ttfctH6ipUdycSjVLZkKM7JNTuc=",
+    "h1:xObLnYI3E4UZmler2aWWhUxZGjnhBNE1xX7uR290uZE=",
+    "h1:zJzJQFrPsRtNtT6L0VO9csvd7kRvyKAFoUQVMsm0STk=",
+    "zh:093ee87efd72f8d2af6e679e91ce2ca87dbe8728aac68bd222139637cac09446",
+    "zh:0aed6ae0632657119a2941f4873b8740f4bde6a6ad566c9dcc7f948f3893298f",
+    "zh:0b1735dc1d645504556fee2611d2c3215adf00edd91e0deddeb911e946710093",
+    "zh:4ac36802415414c81104bdf8f7c725f53a09ac2d23a30ea3cbce9ef94eb1751b",
+    "zh:64ac2c334e6bf4ca42d00e1c260b98ee7670de69bff820f00de20bf3e0584d3e",
+    "zh:7202e3ec8567298306f8a8b3d48fcd5b518156bdfd02ae1b0607cb892d6f1d61",
+    "zh:75b0ca69b300b4d716be88318963c6500360af63871b3474124ebd0aed895709",
+    "zh:76e2c1e155885cdb8258a2f83883d41c0bc4a7db2581f51abae80d38957e8bca",
+    "zh:77f086e29a9dca26c78aafcfa5c6bb951976397d21fdcd3cfe4cf12f514bc7ee",
+    "zh:803f2c184cc5264d0cc7cbc9a84e18c06a09aca208b5aebc5a9effc1d755f93c",
+    "zh:86b407c9e6ea15b62ff14b85237b1c617f6db8a4730d16c5589ac39ffad89957",
+    "zh:890df766e9b839623b1f0437355032a3c006226a6c200cd911e15ee1a9014e9f",
+    "zh:8d36e39bf8362014476c6c230d59b752fc17ac40b4aced9f3fdc7c40c5019e97",
+    "zh:c55ea80756077dce90403d932f0e621bfbb14084355f7b2c669aadcd42684ba4",
+  ]
+}
+
 provider "registry.opentofu.org/hashicorp/archive" {
   version     = "2.8.0"
   constraints = "2.8.0"

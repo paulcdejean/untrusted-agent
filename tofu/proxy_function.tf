@@ -48,12 +48,14 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
       key        = "OPENROUTER_API_KEY"
       project_id = local.workspace.project_id
       secret     = google_secret_manager_secret.openrouter_api_key.secret_id
-      version    = "latest"
+      # Pinning the exact version (instances resolve secret env vars once, at
+      # startup, so "latest" goes stale in warm instances) — a rotation rolls
+      # the version resource, which rolls a new revision here.
+      version = google_secret_manager_secret_version.openrouter_api_key.version
     }
   }
 
   depends_on = [
-    google_secret_manager_secret_version.openrouter_api_key,
     google_secret_manager_secret_iam_member.proxy_reads_key,
     google_project_iam_member.compute_default_builds,
   ]

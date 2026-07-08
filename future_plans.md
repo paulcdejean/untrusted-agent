@@ -1,4 +1,20 @@
-# Future plans
+# Future plans, in priority order
+
+## Instead of having the project ID hardcoded, get the project based on name
+
+Project IDs are globally unique after all. But project names are not.
+
+## Hookup SSH auth to your caller identity instead of having to hardcode your email address
+
+Having my email in the source code is bad form...
+
+## Make sure multiple environments single project is supported
+
+Might require splitting tofu into layers not sure
+
+## Document the setup process
+
+Setting up the auth for the r2 remote state for example, isn't intuitive.
 
 ## Move the proxy to a Cloudflare Worker
 
