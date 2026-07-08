@@ -36,7 +36,7 @@ resource "google_compute_instance" "agent" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-12"
+      image = "debian-cloud/debian-13"
       size  = 20
     }
   }
