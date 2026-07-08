@@ -24,7 +24,7 @@ Trust boundaries:
 * The VM's service account has `run.invoker` on the proxy, log/metric writer,
   and nothing else. No Secret Manager access anywhere in its reach.
 * The proxy's service account is the only principal with `secretAccessor` on
-  `openrouter_api_key`.
+  the OpenRouter key secret.
 * The VM has no external IP (egress via Cloud NAT) and accepts SSH only from
   IAP's tunnel range.
 * The real key never enters tofu state: the secret version is created
@@ -34,7 +34,7 @@ Trust boundaries:
 
 * `tofu/` — the whole stack (project, secret, proxy function, VM). State on
   R2 via the `cloudflare` AWS profile, `unstable` workspace.
-* `proxy/` — Node 22 source for the Cloud Run function; zipped and deployed
+* `proxy/` — Node 24 source for the Cloud Run function; zipped and deployed
   by tofu.
 
 ## Deploying
@@ -42,8 +42,8 @@ Trust boundaries:
 The project itself is created out of band, once:
 
 ```sh
-gcloud projects create untrusted-agent-paul
-gcloud billing projects link untrusted-agent-paul \
+gcloud projects create untrusted-agent
+gcloud billing projects link untrusted-agent \
   --billing-account $(gcloud billing accounts list --format 'value(name)')
 ```
 
@@ -65,8 +65,9 @@ Notes for the first apply:
 Then give the proxy the real key (never via tofu):
 
 ```sh
-echo -n "sk-or-..." | gcloud secrets versions add openrouter_api_key \
-  --project untrusted-agent-paul --data-file=-
+echo -n "sk-or-..." | gcloud secrets versions add \
+  untrusted_agent-unstable-openrouter_api_key \
+  --project untrusted-agent --data-file=-
 ```
 
 The function reads version `latest`, so rotation is the same command again.
@@ -74,7 +75,7 @@ The function reads version `latest`, so rotation is the same command again.
 ## Using the agent
 
 ```sh
-gcloud compute ssh untrusted-agent --project untrusted-agent-paul \
+gcloud compute ssh untrusted-agent-unstable --project untrusted-agent \
   --zone us-central1-a --tunnel-through-iap
 pi --model openrouter/anthropic/claude-sonnet-4.5
 ```

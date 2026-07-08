@@ -1,6 +1,7 @@
 # The real key is added out of band and never touches state:
-#   echo -n "sk-or-..." | gcloud secrets versions add openrouter_api_key \
-#     --project untrusted-agent-paul --data-file=-
+#   echo -n "sk-or-..." | gcloud secrets versions add \
+#     untrusted_agent-<workspace>-openrouter_api_key \
+#     --project untrusted-agent --data-file=-
 # The proxy function reads version "latest", so the placeholder version
 # below only exists to create the secret; adding a real version supersedes it.
 resource "google_secret_manager_secret" "openrouter_api_key" {

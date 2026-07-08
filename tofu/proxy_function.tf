@@ -26,7 +26,7 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
   location = local.workspace.region
 
   build_config {
-    runtime     = "nodejs22"
+    runtime     = "nodejs24"
     entry_point = "proxy"
     source {
       storage_source {
