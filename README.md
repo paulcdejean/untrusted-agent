@@ -1,3 +1,5 @@
+For setup instructions see SETUP.md
+
 # untrusted-agent
 
 An AI agent that cannot leak its own API key, because it has never seen it.
