@@ -1,3 +1,5 @@
+For setup instructions see SETUP.md
+
 # untrusted-agent
 
 An AI agent that cannot leak its own API key, because it has never seen it.
@@ -27,7 +29,9 @@ Trust boundaries:
   the OpenRouter key secret.
 * The VM has no external IPv4; egress rides a free external IPv6 in a custom
   VPC with no ingress rules (the GCP analog of an AWS egress-only internet
-  gateway), and SSH is accepted only from IAP's tunnel range.
+  gateway), and SSH is accepted only from IAP's tunnel range. The SSH admin
+  roles go to whoever runs `tofu apply` (read from the ADC identity), so no
+  email lives in the source.
 * Two OpenRouter keys with different blast radii: the *provisioning* key
   exists only in the shell running tofu (`OPENROUTER_API_KEY` env var, never
   in state). The *runtime* key is minted by tofu through the management API,
@@ -38,17 +42,22 @@ Trust boundaries:
 ## Layout
 
 * `tofu/` — the whole stack (project, secret, proxy function, VM). State on
-  R2 via the `cloudflare` AWS profile, `unstable` workspace.
+  R2 via the `cloudflare` AWS profile. Two workspaces, `unstable` and `prod`,
+  share the one GCP project: every resource is namespaced by workspace and no
+  project-level binding is shared, so either can be destroyed without
+  touching the other.
 * `proxy/` — Go source for the Cloud Run function; zipped and deployed by
   tofu.
 
 ## Deploying
 
-The project itself is created out of band, once:
+The project itself is created out of band, once. Tofu finds it by display
+**name** (`untrusted-agent`), not by ID — IDs are globally unique, so pick
+whatever ID is free:
 
 ```sh
-gcloud projects create untrusted-agent
-gcloud billing projects link untrusted-agent \
+gcloud projects create <any-free-id> --name untrusted-agent
+gcloud billing projects link <any-free-id> \
   --billing-account $(gcloud billing accounts list --format 'value(name)')
 ```
 
@@ -58,7 +67,7 @@ Then:
 cd tofu
 export OPENROUTER_API_KEY=sk-or-...   # a *provisioning* key, from openrouter.ai/settings/keys
 tofu init
-tofu workspace new unstable   # first time only
+tofu workspace new unstable   # or prod; first time only
 tofu apply
 ```
 
@@ -84,8 +93,7 @@ vars at startup — `latest` would go stale in warm instances).
 ## Using the agent
 
 ```sh
-gcloud compute ssh untrusted-agent-unstable --project untrusted-agent \
-  --zone us-central1-a --tunnel-through-iap
+$(cd tofu && tofu output -raw ssh_command)
 pi --model openrouter/deepseek/deepseek-v4-flash
 ```
 

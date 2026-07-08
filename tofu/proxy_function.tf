@@ -1,6 +1,6 @@
 resource "google_storage_bucket" "function_source" {
-  project                     = local.workspace.project_id
-  name                        = "${local.workspace.project_id}-${tofu.workspace}-function-source"
+  project                     = local.project_id
+  name                        = "${local.project_id}-${tofu.workspace}-function-source"
   location                    = local.workspace.region
   uniform_bucket_level_access = true
   force_destroy               = true
@@ -20,13 +20,14 @@ resource "google_storage_bucket_object" "proxy_source" {
 }
 
 resource "google_cloudfunctions2_function" "openrouter_proxy" {
-  project  = local.workspace.project_id
+  project  = local.project_id
   name     = "untrusted-agent-proxy-${tofu.workspace}"
   location = local.workspace.region
 
   build_config {
-    runtime     = "go126"
-    entry_point = "proxy"
+    runtime         = "go126"
+    entry_point     = "proxy"
+    service_account = google_service_account.build.id
     source {
       storage_source {
         bucket = google_storage_bucket.function_source.name
@@ -46,7 +47,7 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
     ingress_settings = "ALLOW_ALL"
     secret_environment_variables {
       key        = "OPENROUTER_API_KEY"
-      project_id = local.workspace.project_id
+      project_id = local.project_id
       secret     = google_secret_manager_secret.openrouter_api_key.secret_id
       # Pinning the exact version (instances resolve secret env vars once, at
       # startup, so "latest" goes stale in warm instances) — a rotation rolls
@@ -57,7 +58,7 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
 
   depends_on = [
     google_secret_manager_secret_iam_member.proxy_reads_key,
-    google_project_iam_member.compute_default_builds,
+    time_sleep.build_iam_propagation,
   ]
 }
 

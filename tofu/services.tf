@@ -13,7 +13,7 @@ resource "google_project_service" "services" {
     "monitoring.googleapis.com",
     "iap.googleapis.com",
   ])
-  project            = local.workspace.project_id
+  project            = local.project_id
   service            = each.value
   disable_on_destroy = false
   lifecycle {

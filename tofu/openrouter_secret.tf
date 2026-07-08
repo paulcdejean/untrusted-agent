@@ -9,7 +9,7 @@ resource "openrouter_api_key" "agent" {
 }
 
 resource "google_secret_manager_secret" "openrouter_api_key" {
-  project   = local.workspace.project_id
+  project   = local.project_id
   secret_id = "untrusted_agent-${tofu.workspace}-openrouter_api_key"
   replication {
     auto {}
