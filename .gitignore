@@ -3,4 +3,3 @@
 *.tfstate.*
 crash.log
 tofu/dist/
-proxy/node_modules/

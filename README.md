@@ -35,8 +35,8 @@ Trust boundaries:
 
 * `tofu/` — the whole stack (project, secret, proxy function, VM). State on
   R2 via the `cloudflare` AWS profile, `unstable` workspace.
-* `proxy/` — Node 24 source for the Cloud Run function; zipped and deployed
-  by tofu.
+* `proxy/` — Go source for the Cloud Run function; zipped and deployed by
+  tofu.
 
 ## Deploying
 

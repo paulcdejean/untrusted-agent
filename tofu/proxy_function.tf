@@ -11,7 +11,6 @@ data "archive_file" "proxy_source" {
   type        = "zip"
   source_dir  = "${path.module}/../proxy"
   output_path = "${path.module}/dist/openrouter-proxy.zip"
-  excludes    = ["node_modules"]
 }
 
 resource "google_storage_bucket_object" "proxy_source" {
@@ -26,7 +25,7 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
   location = local.workspace.region
 
   build_config {
-    runtime     = "nodejs24"
+    runtime     = "go126"
     entry_point = "proxy"
     source {
       storage_source {
@@ -38,9 +37,10 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
 
   service_config {
     service_account_email = google_service_account.proxy.email
-    # 128Mi OOMs: the Node runtime baseline alone sits at ~130MiB.
-    available_memory = "256Mi"
-    max_instance_count    = 3
+    # The Go runtime idles around 15MiB, so the 128Mi floor fits with room to
+    # spare — the Node runtime's ~130MiB baseline did not.
+    available_memory   = "128Mi"
+    max_instance_count = 3
     # Agentic responses stream for a long time; give them the gen2 HTTP maximum.
     timeout_seconds  = 3600
     ingress_settings = "ALLOW_ALL"
