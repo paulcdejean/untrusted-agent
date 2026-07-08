@@ -15,6 +15,7 @@ resource "google_secret_manager_secret" "openrouter_api_key" {
 
 resource "google_secret_manager_secret_version" "openrouter_api_key" {
   secret                 = google_secret_manager_secret.openrouter_api_key.id
+  enabled                = false
   secret_data_wo         = "not_the_key"
   secret_data_wo_version = 0
 }

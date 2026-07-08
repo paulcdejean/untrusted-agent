@@ -1,3 +1,18 @@
+locals {
+  agent_startup_script = templatefile("${path.module}/templates/startup.sh.tftpl", {
+    proxy_url      = google_cloudfunctions2_function.openrouter_proxy.url
+    sidecar_source = file("${path.module}/templates/sidecar.mjs")
+    models_json    = file("${path.module}/templates/models.json")
+  })
+}
+
+# The startup script only runs at boot and seeds /etc/skel, so in-place
+# metadata updates never reach an already-provisioned box. Any change to the
+# script (or the files templated into it) must recreate the VM instead.
+resource "terraform_data" "agent_startup_script" {
+  triggers_replace = local.agent_startup_script
+}
+
 resource "google_compute_instance" "agent" {
   project      = local.workspace.project_id
   name         = "untrusted-agent-${tofu.workspace}"
@@ -24,11 +39,11 @@ resource "google_compute_instance" "agent" {
 
   metadata = {
     enable-oslogin = "TRUE"
-    startup-script = templatefile("${path.module}/templates/startup.sh.tftpl", {
-      proxy_url      = google_cloudfunctions2_function.openrouter_proxy.url
-      sidecar_source = file("${path.module}/templates/sidecar.mjs")
-      models_json    = file("${path.module}/templates/models.json")
-    })
+    startup-script = local.agent_startup_script
+  }
+
+  lifecycle {
+    replace_triggered_by = [terraform_data.agent_startup_script]
   }
 
   depends_on = [google_compute_router_nat.agent]

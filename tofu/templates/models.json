@@ -7,22 +7,13 @@
       "api": "openai-completions",
       "models": [
         {
-          "id": "anthropic/claude-sonnet-4.5",
-          "name": "Claude Sonnet 4.5",
+          "id": "deepseek/deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
           "reasoning": false,
-          "input": ["text", "image"],
+          "input": ["text"],
           "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
-          "contextWindow": 200000,
-          "maxTokens": 16384
-        },
-        {
-          "id": "openai/gpt-4o",
-          "name": "GPT-4o",
-          "reasoning": false,
-          "input": ["text", "image"],
-          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
-          "contextWindow": 128000,
-          "maxTokens": 8192
+          "contextWindow": 1048576,
+          "maxTokens": 65536
         }
       ]
     }

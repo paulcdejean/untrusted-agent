@@ -77,7 +77,7 @@ The function reads version `latest`, so rotation is the same command again.
 ```sh
 gcloud compute ssh untrusted-agent-unstable --project untrusted-agent \
   --zone us-central1-a --tunnel-through-iap
-pi --model openrouter/anthropic/claude-sonnet-4.5
+pi --model openrouter/deepseek/deepseek-v4-flash
 ```
 
 `~/.pi/agent/models.json` (seeded from `/etc/skel` by the startup script)
