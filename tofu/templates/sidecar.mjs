@@ -63,7 +63,10 @@ http.createServer(async function (req, res) {
   headers.host = proxyUrl.host;
   headers.authorization = 'Bearer ' + token;
 
-  const upstream = https.request(new URL(req.url, proxyUrl.origin), {
+  // Join PROXY_URL's own path (if any) with the incoming path, so both
+  // origin-style run.app URLs and path-style cloudfunctions.net URLs work.
+  const basePath = proxyUrl.pathname.replace(/\/$/, '');
+  const upstream = https.request(new URL(basePath + req.url, proxyUrl.origin), {
     method: req.method,
     headers: headers,
   }, function (response) {

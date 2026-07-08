@@ -59,5 +59,5 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
 }
 
 output "proxy_url" {
-  value = google_cloudfunctions2_function.openrouter_proxy.url
+  value = google_cloudfunctions2_function.openrouter_proxy.service_config[0].uri
 }
