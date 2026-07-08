@@ -1,9 +1,5 @@
 # Future plans, in priority order
 
-## Leverage the openrouter provider to inject the key automatically
-
-https://github.com/cloudopsworks/terraform-provider-openrouter
-
 ## Instead of having the project ID hardcoded, get the project based on name
 
 Project IDs are globally unique after all. But project names are not.

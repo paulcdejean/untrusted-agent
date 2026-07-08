@@ -9,6 +9,10 @@ terraform {
       source  = "hashicorp/archive"
       version = "2.8.0"
     }
+    openrouter = {
+      source  = "cloudopsworks/openrouter"
+      version = "0.2.17"
+    }
   }
   backend "s3" {
     profile                     = "cloudflare"
@@ -30,3 +34,9 @@ provider "google" {
   project = local.workspace.project_id
   region  = local.workspace.region
 }
+
+# Authenticates with the OPENROUTER_API_KEY environment variable, which must
+# hold an OpenRouter *provisioning* key (openrouter.ai/settings/keys). It only
+# ever exists in the shell running tofu; the runtime key it mints is what
+# lands in Secret Manager.
+provider "openrouter" {}
