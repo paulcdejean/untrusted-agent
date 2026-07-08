@@ -71,7 +71,10 @@ echo -n "sk-or-..." | gcloud secrets versions add \
   --project untrusted-agent --data-file=-
 ```
 
-The function reads version `latest`, so rotation is the same command again.
+The function pins the exact version that is latest at apply time (instances
+only resolve secret env vars at startup, so `latest` would go stale in warm
+instances). Rotation is therefore the same command again **plus `tofu
+apply`**, which rolls a new revision onto the new version.
 
 ## Using the agent
 

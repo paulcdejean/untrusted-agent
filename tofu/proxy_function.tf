@@ -48,7 +48,7 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
       key        = "OPENROUTER_API_KEY"
       project_id = local.workspace.project_id
       secret     = google_secret_manager_secret.openrouter_api_key.secret_id
-      version    = "latest"
+      version    = regex("\\d+$", data.google_secret_manager_secret_version.openrouter_api_key_latest.name)
     }
   }
 

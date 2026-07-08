@@ -25,3 +25,15 @@ resource "google_secret_manager_secret_version" "openrouter_api_key" {
     ]
   }
 }
+
+# Resolves which version is currently "latest", without fetching the payload
+# (so the real key stays out of state). The function pins this exact version:
+# rotation = add a version out of band, then apply — the version bump rolls a
+# new revision, which is what actually makes instances pick up a new key
+# (they resolve secret env vars once, at instance startup).
+data "google_secret_manager_secret_version" "openrouter_api_key_latest" {
+  # Referencing through the placeholder version (not the secret) so a fresh
+  # bootstrap can't resolve latest before any version exists.
+  secret            = google_secret_manager_secret_version.openrouter_api_key.secret
+  fetch_secret_data = false
+}
