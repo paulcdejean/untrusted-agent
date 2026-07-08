@@ -46,11 +46,11 @@ s3 =
 
 # FAQ
 
-Q: Why three seperate things? Google cloud can fufil all of these roles.
-A: It's really my personal preference. Specifically though I like how R2 bucket names are not globally unique.
+**Q:** Why three seperate things? Google cloud can fufil all of these roles.<br>
+**A:** It's really my personal preference. Specifically though I like how R2 bucket names are not globally unique.
 
-Q: How much money does this cost?
-A: It depends on runtime and usage. I would say google cloud costs are unlikely to exceed $15 a month. Openrouter depends completely on usage, but if you fund it with $10 it won't cost more than $10. Cloudflare is throughly in the free tier.
+**Q:** How much money does this cost?<br>
+**A:** It depends on runtime and usage. I would say google cloud costs are unlikely to exceed $15 a month. Openrouter depends completely on usage, but if you fund it with $10 it won't cost more than $10. Cloudflare is throughly in the free tier.
 
-Q: That's too expensive can this be done more cheaply with digital ocean or similar?
-A: I don't think that's a good idea. Google cloud's auth story is very strong, which is the whole point of this exercise. Trying to use digital ocean would be penny wise and pound foolish.
+**Q:** That's too expensive can this be done more cheaply with digital ocean or similar?<br>
+**A:** I don't think that's a good idea. Google cloud's auth story is very strong, which is the whole point of this exercise. Trying to use digital ocean would be penny wise and pound foolish.
