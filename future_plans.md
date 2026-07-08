@@ -1,9 +1,5 @@
 # Future plans, in priority order
 
-## Hookup SSH auth to your caller identity instead of having to hardcode your email address
-
-Having my email in the source code is bad form...
-
 ## Make sure multiple environments single project is supported
 
 Might require splitting tofu into layers not sure

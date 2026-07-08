@@ -41,17 +41,17 @@ resource "google_project_iam_member" "compute_default_builds" {
 resource "google_project_iam_member" "admin_oslogin" {
   project = local.project_id
   role    = "roles/compute.osAdminLogin"
-  member  = "user:${local.workspace.admin_user}"
+  member  = local.admin_member
 }
 
 resource "google_project_iam_member" "admin_iap_tunnel" {
   project = local.project_id
   role    = "roles/iap.tunnelResourceAccessor"
-  member  = "user:${local.workspace.admin_user}"
+  member  = local.admin_member
 }
 
 resource "google_service_account_iam_member" "admin_uses_agent_sa" {
   service_account_id = google_service_account.agent.name
   role               = "roles/iam.serviceAccountUser"
-  member             = "user:${local.workspace.admin_user}"
+  member             = local.admin_member
 }

@@ -16,6 +16,14 @@ data "google_project" "this" {
   }
 }
 
+# Whoever runs tofu is the human admin — no email hardcoded in source.
+data "google_client_openid_userinfo" "me" {}
+
 locals {
   project_id = data.google_project.this.project_id
+  admin_member = (
+    endswith(data.google_client_openid_userinfo.me.email, "gserviceaccount.com")
+    ? "serviceAccount:${data.google_client_openid_userinfo.me.email}"
+    : "user:${data.google_client_openid_userinfo.me.email}"
+  )
 }

@@ -27,7 +27,9 @@ Trust boundaries:
   the OpenRouter key secret.
 * The VM has no external IPv4; egress rides a free external IPv6 in a custom
   VPC with no ingress rules (the GCP analog of an AWS egress-only internet
-  gateway), and SSH is accepted only from IAP's tunnel range.
+  gateway), and SSH is accepted only from IAP's tunnel range. The SSH admin
+  roles go to whoever runs `tofu apply` (read from the ADC identity), so no
+  email lives in the source.
 * Two OpenRouter keys with different blast radii: the *provisioning* key
   exists only in the shell running tofu (`OPENROUTER_API_KEY` env var, never
   in state). The *runtime* key is minted by tofu through the management API,
