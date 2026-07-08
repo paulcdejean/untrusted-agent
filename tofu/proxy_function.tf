@@ -38,7 +38,8 @@ resource "google_cloudfunctions2_function" "openrouter_proxy" {
 
   service_config {
     service_account_email = google_service_account.proxy.email
-    available_memory      = "128Mi"
+    # 128Mi OOMs: the Node runtime baseline alone sits at ~130MiB.
+    available_memory = "256Mi"
     max_instance_count    = 3
     # Agentic responses stream for a long time; give them the gen2 HTTP maximum.
     timeout_seconds  = 3600

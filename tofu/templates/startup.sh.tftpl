@@ -6,6 +6,17 @@
 # release: registry.npmjs.org is reachable over IPv6, github.com is not, and
 # a registry tarball is a plain curl away — no node/npm bootstrap needed.
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+
+# pi wants fd and ripgrep and downloads them from GitHub releases when
+# missing — which times out on this box, since GitHub has no IPv6. Provide
+# them from the Debian repos instead (whose mirrors are dual-stack).
+# Debian ships fd's binary as fdfind; pi looks for it under its real name.
+if ! command -v rg >/dev/null 2>&1 || ! command -v fd >/dev/null 2>&1; then
+  apt-get update
+  apt-get install -y ripgrep fd-find
+  ln -sf /usr/bin/fdfind /usr/local/bin/fd
+fi
 
 if ! command -v bun >/dev/null 2>&1; then
   curl -fsSL "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-${bun_version}.tgz" \
